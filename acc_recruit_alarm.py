@@ -2,9 +2,14 @@ import requests
 from bs4 import BeautifulSoup
 import send_mail
 import os
+import logging
+import logging.config
 
 class AccRecruitAlarm(object):
     def __init__(self):
+        logging.config.fileConfig('logging.conf')
+        self.logger = logging.getLogger(__name__)
+
         self.url = 'https://www.acc.go.kr/notice/Employ/list'
         self.headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36'}
         self.history_dir = './history/'
@@ -28,8 +33,9 @@ class AccRecruitAlarm(object):
             message = message + '\n\n게시판 바로가기({})'.format(self.url)
             self.save_file(self.html)
             send_mail.send_mail(message)
+            self.logger.info('업데이트 되었습니다.')
         else:
-            print('업데이트 할 내용이 없습니다.')
+            self.logger.info('업데이트 할 내용이 없습니다.')
 
 
     def get_title(self, html):
@@ -50,7 +56,7 @@ class AccRecruitAlarm(object):
         try:
             file = open(self.history_file_name, 'rt').read()
         except:
-            print('...No File...')
+            self.logger.info('불러올 파일이 없습니다.')
 
         return file     # str type
 
@@ -61,7 +67,12 @@ class AccRecruitAlarm(object):
 
 
     def get_html(self):
-        return requests.get(self.url, headers = self.headers).text    # str type
+        try:
+            html = requests.get(self.url, headers = self.headers).text
+            self.logger.info('접속 성공')
+        except:
+            self.logger.error('접속 실패')
+        return html    # str type
 
 
     def list_check(self, list1, list2):
