@@ -1,10 +1,13 @@
 import smtplib
 from email.mime.text import MIMEText
 import configparser
+import os
+
+dir = os.path.dirname(os.path.abspath(__file__)
 
 def send_mail():
 	config = configparser.ConfigParser()
-	config.read('setting.cfg')
+	config.read(dir + '/setting.cfg')
 	mail_info_section = 'MAIL_INFO'
 
 	sender = config.get(mail_info_section, 'sender')
@@ -31,7 +34,7 @@ def send_mail():
 
 def send_mail(_message):
 	config = configparser.ConfigParser()
-	config.read('setting.cfg')
+	config.read(dir + '/setting.cfg')
 	mail_info_section = 'MAIL_INFO'
 
 	sender = config.get(mail_info_section, 'sender')
