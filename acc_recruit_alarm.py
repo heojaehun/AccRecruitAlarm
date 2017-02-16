@@ -2,15 +2,15 @@ import requests
 from bs4 import BeautifulSoup
 import send_mail
 import os
-import logging
-import logging.config
+#import logging
+#import logging.config
 
-dir = os.path.dirname(os.path.abspath(__file__)
+dir = os.path.dirname(os.path.abspath(__file__))
 
 class AccRecruitAlarm(object):
     def __init__(self):
-        logging.config.fileConfig(dir + 'logging.conf')
-        self.logger = logging.getLogger(__name__)
+        #logging.config.fileConfig(dir + 'logging.conf')
+        #self.logger = logging.getLogger(__name__)
 
         self.url = 'https://www.acc.go.kr/notice/Employ/list'
         self.headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36'}
@@ -35,9 +35,11 @@ class AccRecruitAlarm(object):
             message = message + '\n\n게시판 바로가기({})'.format(self.url)
             self.save_file(self.html)
             send_mail.send_mail(message)
-            self.logger.info('업데이트 되었습니다.')
+            #self.logger.info('업데이트 되었습니다.')
         else:
-            self.logger.info('업데이트 할 내용이 없습니다.')
+            pass
+            #self.logger.info('업데이트 할 내용이 없습니다.')
+            print('업데이트 할 내용이 없습니다.')
             
     def get_title(self, html):
         soup = BeautifulSoup(html, 'html.parser')
@@ -58,7 +60,7 @@ class AccRecruitAlarm(object):
             file = open(self.history_file_name, 'rt').read()
         except:
             pass
-            self.logger.info('불러올 파일이 없습니다.')
+            #self.logger.info('불러올 파일이 없습니다.')
 
         return file     # str type
 
